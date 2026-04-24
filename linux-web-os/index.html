@@ -26,6 +26,22 @@
                 <div class="icon">📝</div>
                 <span>Text Editor</span>
             </div>
+            <div class="desktop-icon" onclick="openBudgetTracker()">
+                <div class="icon">💰</div>
+                <span>Budget</span>
+            </div>
+            <div class="desktop-icon" onclick="openExpenseManager()">
+                <div class="icon">💳</div>
+                <span>Expenses</span>
+            </div>
+            <div class="desktop-icon" onclick="openSavingsGoal()">
+                <div class="icon">🎯</div>
+                <span>Savings</span>
+            </div>
+            <div class="desktop-icon" onclick="openFinancialReports()">
+                <div class="icon">📊</div>
+                <span>Reports</span>
+            </div>
             <div class="desktop-icon" onclick="openSettings()">
                 <div class="icon">⚙️</div>
                 <span>Settings</span>
@@ -93,6 +109,146 @@
                 <br><br>
                 <h3>System Info</h3>
                 <p id="system-info"></p>
+            </div>
+        </div>
+
+        <!-- Budget Tracker Window -->
+        <div class="window budget-window" id="budget-window" style="display:none;">
+            <div class="window-header">
+                <span class="window-title">Budget Tracker</span>
+                <button class="close-btn" onclick="closeWindow('budget-window')">×</button>
+            </div>
+            <div class="window-content budget-content">
+                <div class="budget-summary">
+                    <div class="summary-card income">
+                        <h4>Income</h4>
+                        <p id="total-income">$0.00</p>
+                    </div>
+                    <div class="summary-card expense">
+                        <h4>Expenses</h4>
+                        <p id="total-expenses">$0.00</p>
+                    </div>
+                    <div class="summary-card balance">
+                        <h4>Balance</h4>
+                        <p id="balance-amount">$0.00</p>
+                    </div>
+                </div>
+                <div class="budget-form">
+                    <h3>Add Transaction</h3>
+                    <input type="text" id="trans-desc" placeholder="Description" class="finance-input">
+                    <input type="number" id="trans-amount" placeholder="Amount" class="finance-input">
+                    <select id="trans-type" class="finance-input">
+                        <option value="income">Income (+)</option>
+                        <option value="expense">Expense (-)</option>
+                    </select>
+                    <select id="trans-category" class="finance-input">
+                        <option value="salary">Salary</option>
+                        <option value="freelance">Freelance</option>
+                        <option value="food">Food</option>
+                        <option value="transport">Transport</option>
+                        <option value="utilities">Utilities</option>
+                        <option value="entertainment">Entertainment</option>
+                        <option value="shopping">Shopping</option>
+                        <option value="other">Other</option>
+                    </select>
+                    <input type="date" id="trans-date" class="finance-input">
+                    <button onclick="addTransaction()" class="finance-btn">Add Transaction</button>
+                </div>
+                <div class="transaction-list">
+                    <h3>Recent Transactions</h3>
+                    <div id="transactions-container"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Expense Manager Window -->
+        <div class="window expense-window" id="expense-window" style="display:none;">
+            <div class="window-header">
+                <span class="window-title">Expense Manager</span>
+                <button class="close-btn" onclick="closeWindow('expense-window')">×</button>
+            </div>
+            <div class="window-content expense-content">
+                <div class="expense-categories">
+                    <h3>Expenses by Category</h3>
+                    <div id="category-breakdown"></div>
+                </div>
+                <div class="monthly-expenses">
+                    <h3>Monthly Overview</h3>
+                    <canvas id="expense-chart" width="400" height="200"></canvas>
+                    <div id="monthly-stats"></div>
+                </div>
+                <div class="expense-tips">
+                    <h3>Money Saving Tips</h3>
+                    <ul id="saving-tips">
+                        <li>Track all your expenses daily</li>
+                        <li>Set a monthly budget and stick to it</li>
+                        <li>Use cash for discretionary spending</li>
+                        <li>Review subscriptions regularly</li>
+                        <li>Cook at home more often</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Savings Goal Window -->
+        <div class="window savings-window" id="savings-window" style="display:none;">
+            <div class="window-header">
+                <span class="window-title">Savings Goals</span>
+                <button class="close-btn" onclick="closeWindow('savings-window')">×</button>
+            </div>
+            <div class="window-content savings-content">
+                <div class="goals-overview">
+                    <h3>Your Savings Goals</h3>
+                    <div id="goals-container"></div>
+                </div>
+                <div class="add-goal-form">
+                    <h3>Create New Goal</h3>
+                    <input type="text" id="goal-name" placeholder="Goal Name (e.g., Vacation)" class="finance-input">
+                    <input type="number" id="goal-target" placeholder="Target Amount ($)" class="finance-input">
+                    <input type="number" id="goal-current" placeholder="Current Saved ($)" class="finance-input">
+                    <input type="date" id="goal-deadline" placeholder="Deadline" class="finance-input">
+                    <button onclick="addSavingsGoal()" class="finance-btn">Create Goal</button>
+                </div>
+                <div class="savings-progress">
+                    <h3>Total Savings Progress</h3>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" id="total-savings-progress"></div>
+                    </div>
+                    <p id="savings-percentage">0% achieved</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Financial Reports Window -->
+        <div class="window reports-window" id="reports-window" style="display:none;">
+            <div class="window-header">
+                <span class="window-title">Financial Reports</span>
+                <button class="close-btn" onclick="closeWindow('reports-window')">×</button>
+            </div>
+            <div class="window-content reports-content">
+                <div class="report-filters">
+                    <h3>Generate Report</h3>
+                    <select id="report-period" class="finance-input">
+                        <option value="week">This Week</option>
+                        <option value="month">This Month</option>
+                        <option value="year">This Year</option>
+                        <option value="all">All Time</option>
+                    </select>
+                    <button onclick="generateReport()" class="finance-btn">Generate</button>
+                </div>
+                <div class="report-summary" id="report-summary">
+                    <h3>Financial Summary</h3>
+                    <div id="report-content"></div>
+                </div>
+                <div class="net-worth-tracker">
+                    <h3>Net Worth Trend</h3>
+                    <div id="net-worth-display"></div>
+                </div>
+                <div class="export-options">
+                    <h3>Export Data</h3>
+                    <button onclick="exportToCSV()" class="finance-btn">Export to CSV</button>
+                    <button onclick="clearAllData()" class="finance-btn danger">Clear All Data</button>
+                </div>
             </div>
         </div>
     </div>

@@ -85,6 +85,17 @@ document.addEventListener('DOMContentLoaded', function() {
     makeDraggable(document.getElementById('file-browser-window'));
     makeDraggable(document.getElementById('text-editor-window'));
     makeDraggable(document.getElementById('settings-window'));
+    makeDraggable(document.getElementById('budget-window'));
+    makeDraggable(document.getElementById('expense-window'));
+    makeDraggable(document.getElementById('savings-window'));
+    makeDraggable(document.getElementById('reports-window'));
+    
+    // Set default date to today
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('trans-date').value = today;
+    
+    // Load financial data
+    loadFinancialData();
 });
 
 // Clock functionality
@@ -124,6 +135,38 @@ function openTextEditor() {
     window.style.display = 'flex';
     window.style.top = '140px';
     window.style.left = '250px';
+}
+
+function openBudgetTracker() {
+    const window = document.getElementById('budget-window');
+    window.style.display = 'flex';
+    window.style.top = '80px';
+    window.style.left = '100px';
+    updateBudgetDisplay();
+}
+
+function openExpenseManager() {
+    const window = document.getElementById('expense-window');
+    window.style.display = 'flex';
+    window.style.top = '100px';
+    window.style.left = '150px';
+    updateExpenseDisplay();
+}
+
+function openSavingsGoal() {
+    const window = document.getElementById('savings-window');
+    window.style.display = 'flex';
+    window.style.top = '120px';
+    window.style.left = '200px';
+    updateSavingsDisplay();
+}
+
+function openFinancialReports() {
+    const window = document.getElementById('reports-window');
+    window.style.display = 'flex';
+    window.style.top = '140px';
+    window.style.left = '250px';
+    generateReport();
 }
 
 function openSettings() {
@@ -414,4 +457,358 @@ function loadSystemInfo() {
         <strong>Memory:</strong> ${navigator.deviceMemory ? navigator.deviceMemory + ' GB' : 'N/A'}<br>
         <strong>CPU Cores:</strong> ${navigator.hardwareConcurrency || 'N/A'}
     `;
+}
+
+// ============================================
+// PERSONAL FINANCE APPLICATIONS
+// ============================================
+
+// Financial Data Storage
+let transactions = [];
+let savingsGoals = [];
+
+// Load financial data from localStorage
+function loadFinancialData() {
+    const savedTransactions = localStorage.getItem('webos_transactions');
+    const savedGoals = localStorage.getItem('webos_savings_goals');
+    
+    if (savedTransactions) {
+        transactions = JSON.parse(savedTransactions);
+    } else {
+        // Add some sample transactions for demonstration
+        transactions = [
+            { id: 1, description: 'Monthly Salary', amount: 5000, type: 'income', category: 'salary', date: new Date().toISOString().split('T')[0] },
+            { id: 2, description: 'Grocery Shopping', amount: 150, type: 'expense', category: 'food', date: new Date().toISOString().split('T')[0] },
+            { id: 3, description: 'Electric Bill', amount: 80, type: 'expense', category: 'utilities', date: new Date().toISOString().split('T')[0] },
+            { id: 4, description: 'Bus Pass', amount: 50, type: 'expense', category: 'transport', date: new Date().toISOString().split('T')[0] }
+        ];
+        saveFinancialData();
+    }
+    
+    if (savedGoals) {
+        savingsGoals = JSON.parse(savedGoals);
+    } else {
+        // Add sample savings goal
+        savingsGoals = [
+            { id: 1, name: 'Emergency Fund', target: 10000, current: 3500, deadline: '2025-12-31' },
+            { id: 2, name: 'Vacation', target: 3000, current: 800, deadline: '2025-06-30' }
+        ];
+        saveFinancialData();
+    }
+    
+    updateBudgetDisplay();
+    updateExpenseDisplay();
+    updateSavingsDisplay();
+}
+
+// Save financial data to localStorage
+function saveFinancialData() {
+    localStorage.setItem('webos_transactions', JSON.stringify(transactions));
+    localStorage.setItem('webos_savings_goals', JSON.stringify(savingsGoals));
+}
+
+// Add Transaction
+function addTransaction() {
+    const desc = document.getElementById('trans-desc').value;
+    const amount = parseFloat(document.getElementById('trans-amount').value);
+    const type = document.getElementById('trans-type').value;
+    const category = document.getElementById('trans-category').value;
+    const date = document.getElementById('trans-date').value;
+    
+    if (!desc || !amount || !date) {
+        alert('Please fill in all fields');
+        return;
+    }
+    
+    const transaction = {
+        id: Date.now(),
+        description: desc,
+        amount: amount,
+        type: type,
+        category: category,
+        date: date
+    };
+    
+    transactions.unshift(transaction);
+    saveFinancialData();
+    
+    // Clear form
+    document.getElementById('trans-desc').value = '';
+    document.getElementById('trans-amount').value = '';
+    
+    updateBudgetDisplay();
+    updateExpenseDisplay();
+    updateSavingsDisplay();
+    
+    alert('Transaction added successfully!');
+}
+
+// Update Budget Display
+function updateBudgetDisplay() {
+    let totalIncome = 0;
+    let totalExpenses = 0;
+    
+    transactions.forEach(trans => {
+        if (trans.type === 'income') {
+            totalIncome += trans.amount;
+        } else {
+            totalExpenses += trans.amount;
+        }
+    });
+    
+    const balance = totalIncome - totalExpenses;
+    
+    document.getElementById('total-income').textContent = `$${totalIncome.toFixed(2)}`;
+    document.getElementById('total-expenses').textContent = `$${totalExpenses.toFixed(2)}`;
+    document.getElementById('balance-amount').textContent = `$${balance.toFixed(2)}`;
+    
+    // Update transactions list
+    const container = document.getElementById('transactions-container');
+    container.innerHTML = '';
+    
+    transactions.slice(0, 10).forEach(trans => {
+        const div = document.createElement('div');
+        div.className = 'transaction-item';
+        div.innerHTML = `
+            <div class="trans-info">
+                <span class="trans-desc">${trans.description}</span>
+                <span class="trans-date">${trans.date}</span>
+            </div>
+            <span class="trans-amount ${trans.type}">${trans.type === 'income' ? '+' : '-'}$${trans.amount.toFixed(2)}</span>
+        `;
+        container.appendChild(div);
+    });
+}
+
+// Update Expense Display
+function updateExpenseDisplay() {
+    const categoryTotals = {};
+    let totalExpenses = 0;
+    
+    transactions.filter(t => t.type === 'expense').forEach(trans => {
+        if (!categoryTotals[trans.category]) {
+            categoryTotals[trans.category] = 0;
+        }
+        categoryTotals[trans.category] += trans.amount;
+        totalExpenses += trans.amount;
+    });
+    
+    // Update category breakdown
+    const breakdownContainer = document.getElementById('category-breakdown');
+    breakdownContainer.innerHTML = '';
+    
+    Object.keys(categoryTotals).forEach(category => {
+        const percentage = ((categoryTotals[category] / totalExpenses) * 100).toFixed(1);
+        const div = document.createElement('div');
+        div.className = 'category-item';
+        div.innerHTML = `
+            <div class="category-header">
+                <span>${category.charAt(0).toUpperCase() + category.slice(1)}</span>
+                <span>$${categoryTotals[category].toFixed(2)} (${percentage}%)</span>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" style="width: ${percentage}%"></div>
+            </div>
+        `;
+        breakdownContainer.appendChild(div);
+    });
+    
+    // Monthly stats
+    const currentMonth = new Date().getMonth();
+    const monthlyExpenses = transactions.filter(t => {
+        const transDate = new Date(t.date);
+        return t.type === 'expense' && transDate.getMonth() === currentMonth;
+    }).reduce((sum, t) => sum + t.amount, 0);
+    
+    document.getElementById('monthly-stats').innerHTML = `
+        <p><strong>This Month's Expenses:</strong> $${monthlyExpenses.toFixed(2)}</p>
+        <p><strong>Average Daily:</strong> $${(monthlyExpenses / new Date().getDate()).toFixed(2)}</p>
+    `;
+}
+
+// Update Savings Display
+function updateSavingsDisplay() {
+    const container = document.getElementById('goals-container');
+    container.innerHTML = '';
+    
+    let totalTarget = 0;
+    let totalCurrent = 0;
+    
+    savingsGoals.forEach(goal => {
+        totalTarget += goal.target;
+        totalCurrent += goal.current;
+        
+        const percentage = ((goal.current / goal.target) * 100).toFixed(1);
+        const div = document.createElement('div');
+        div.className = 'goal-card';
+        div.innerHTML = `
+            <div class="goal-header">
+                <h4>${goal.name}</h4>
+                <button onclick="deleteGoal(${goal.id})" class="delete-btn">×</button>
+            </div>
+            <p class="goal-deadline">Deadline: ${goal.deadline}</p>
+            <div class="goal-progress">
+                <div class="progress-bar-container">
+                    <div class="progress-bar" style="width: ${Math.min(percentage, 100)}%"></div>
+                </div>
+                <p>${percentage}% complete</p>
+            </div>
+            <div class="goal-amounts">
+                <span>$${goal.current.toLocaleString()}</span>
+                <span>/</span>
+                <span>$${goal.target.toLocaleString()}</span>
+            </div>
+        `;
+        container.appendChild(div);
+    });
+    
+    // Update total progress
+    const totalPercentage = totalTarget > 0 ? ((totalCurrent / totalTarget) * 100).toFixed(1) : 0;
+    document.getElementById('total-savings-progress').style.width = `${Math.min(totalPercentage, 100)}%`;
+    document.getElementById('savings-percentage').textContent = `${totalPercentage}% achieved ($${totalCurrent.toLocaleString()} / $${totalTarget.toLocaleString()})`;
+}
+
+// Add Savings Goal
+function addSavingsGoal() {
+    const name = document.getElementById('goal-name').value;
+    const target = parseFloat(document.getElementById('goal-target').value);
+    const current = parseFloat(document.getElementById('goal-current').value) || 0;
+    const deadline = document.getElementById('goal-deadline').value;
+    
+    if (!name || !target || !deadline) {
+        alert('Please fill in all required fields');
+        return;
+    }
+    
+    const goal = {
+        id: Date.now(),
+        name: name,
+        target: target,
+        current: current,
+        deadline: deadline
+    };
+    
+    savingsGoals.push(goal);
+    saveFinancialData();
+    
+    // Clear form
+    document.getElementById('goal-name').value = '';
+    document.getElementById('goal-target').value = '';
+    document.getElementById('goal-current').value = '';
+    document.getElementById('goal-deadline').value = '';
+    
+    updateSavingsDisplay();
+    alert('Savings goal created successfully!');
+}
+
+// Delete Goal
+function deleteGoal(id) {
+    if (confirm('Are you sure you want to delete this goal?')) {
+        savingsGoals = savingsGoals.filter(g => g.id !== id);
+        saveFinancialData();
+        updateSavingsDisplay();
+    }
+}
+
+// Generate Report
+function generateReport() {
+    const period = document.getElementById('report-period').value;
+    const now = new Date();
+    let filteredTransactions = [];
+    
+    if (period === 'week') {
+        const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+        filteredTransactions = transactions.filter(t => new Date(t.date) >= weekAgo);
+    } else if (period === 'month') {
+        filteredTransactions = transactions.filter(t => {
+            const transDate = new Date(t.date);
+            return transDate.getMonth() === now.getMonth() && transDate.getFullYear() === now.getFullYear();
+        });
+    } else if (period === 'year') {
+        filteredTransactions = transactions.filter(t => {
+            const transDate = new Date(t.date);
+            return transDate.getFullYear() === now.getFullYear();
+        });
+    } else {
+        filteredTransactions = transactions;
+    }
+    
+    const income = filteredTransactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
+    const expenses = filteredTransactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
+    const netSavings = income - expenses;
+    const savingsRate = income > 0 ? ((netSavings / income) * 100).toFixed(1) : 0;
+    
+    document.getElementById('report-content').innerHTML = `
+        <div class="report-grid">
+            <div class="report-stat">
+                <label>Total Income</label>
+                <p class="income">$${income.toFixed(2)}</p>
+            </div>
+            <div class="report-stat">
+                <label>Total Expenses</label>
+                <p class="expense">$${expenses.toFixed(2)}</p>
+            </div>
+            <div class="report-stat">
+                <label>Net Savings</label>
+                <p class="${netSavings >= 0 ? 'income' : 'expense'}">$${netSavings.toFixed(2)}</p>
+            </div>
+            <div class="report-stat">
+                <label>Savings Rate</label>
+                <p>${savingsRate}%</p>
+            </div>
+        </div>
+        <div class="report-summary-text">
+            <p><strong>Analysis:</strong> ${getFinancialAdvice(netSavings, savingsRate)}</p>
+        </div>
+    `;
+    
+    // Net worth display
+    const totalAssets = savingsGoals.reduce((sum, g) => sum + g.current, 0);
+    document.getElementById('net-worth-display').innerHTML = `
+        <p><strong>Current Net Worth:</strong> $${(totalAssets + netSavings).toLocaleString()}</p>
+        <p><strong>Total Saved in Goals:</strong> $${totalAssets.toLocaleString()}</p>
+    `;
+}
+
+// Get Financial Advice
+function getFinancialAdvice(netSavings, savingsRate) {
+    if (savingsRate >= 20) {
+        return "Excellent! You're saving more than 20% of your income. Keep up the great work!";
+    } else if (savingsRate >= 10) {
+        return "Good job! You're on track, but try to increase your savings rate to 20%.";
+    } else if (netSavings >= 0) {
+        return "You're breaking even or saving a little. Look for ways to reduce expenses.";
+    } else {
+        return "Warning: You're spending more than you earn. Review your budget immediately!";
+    }
+}
+
+// Export to CSV
+function exportToCSV() {
+    let csv = 'ID,Description,Amount,Type,Category,Date\n';
+    transactions.forEach(t => {
+        csv += `${t.id},"${t.description}",${t.amount},${t.type},${t.category},${t.date}\n`;
+    });
+    
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `financial_data_${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+}
+
+// Clear All Data
+function clearAllData() {
+    if (confirm('WARNING: This will delete ALL your financial data. Are you sure?')) {
+        localStorage.removeItem('webos_transactions');
+        localStorage.removeItem('webos_savings_goals');
+        transactions = [];
+        savingsGoals = [];
+        updateBudgetDisplay();
+        updateExpenseDisplay();
+        updateSavingsDisplay();
+        alert('All data has been cleared.');
+    }
 }

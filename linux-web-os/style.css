@@ -329,3 +329,347 @@ body {
     background: #3d3d3d;
     color: #e0e0e0;
 }
+
+/* Finance Applications Styles */
+.budget-content, .expense-content, .savings-content, .reports-content {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.budget-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.summary-card {
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    color: white;
+}
+
+.summary-card.income {
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+}
+
+.summary-card.expense {
+    background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+}
+
+.summary-card.balance {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.summary-card h4 {
+    font-size: 14px;
+    margin-bottom: 10px;
+    opacity: 0.9;
+}
+
+.summary-card p {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.budget-form, .add-goal-form, .report-filters {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.dark-mode .budget-form, .dark-mode .add-goal-form, .dark-mode .report-filters {
+    background: #3d3d3d;
+}
+
+.finance-input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.dark-mode .finance-input {
+    background: #2d2d2d;
+    border-color: #444;
+    color: #e0e0e0;
+}
+
+.finance-btn {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 14px;
+    transition: transform 0.2s;
+}
+
+.finance-btn:hover {
+    transform: translateY(-2px);
+}
+
+.finance-btn.danger {
+    background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+    margin-top: 10px;
+}
+
+.transaction-list, .expense-categories, .goals-overview, .savings-progress {
+    margin-top: 20px;
+}
+
+.transaction-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+    transition: background 0.3s;
+}
+
+.dark-mode .transaction-item {
+    border-color: #444;
+}
+
+.transaction-item:hover {
+    background: rgba(102, 126, 234, 0.1);
+}
+
+.trans-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.trans-desc {
+    font-weight: 500;
+    color: #333;
+}
+
+.dark-mode .trans-desc {
+    color: #e0e0e0;
+}
+
+.trans-date {
+    font-size: 12px;
+    color: #888;
+}
+
+.trans-amount {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.trans-amount.income {
+    color: #11998e;
+}
+
+.trans-amount.expense {
+    color: #eb3349;
+}
+
+.category-item {
+    margin-bottom: 15px;
+}
+
+.category-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.progress-bar-container {
+    width: 100%;
+    height: 10px;
+    background: #e0e0e0;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.dark-mode .progress-bar-container {
+    background: #444;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 5px;
+    transition: width 0.3s ease;
+}
+
+.goal-card {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+.dark-mode .goal-card {
+    background: #3d3d3d;
+}
+
+.goal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.goal-deadline {
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 10px;
+}
+
+.goal-progress {
+    margin-bottom: 10px;
+}
+
+.goal-progress p {
+    font-size: 12px;
+    color: #666;
+    margin-top: 5px;
+}
+
+.goal-amounts {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    color: #667eea;
+}
+
+.delete-btn {
+    background: #eb3349;
+    color: white;
+    border: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.report-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.report-stat {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.dark-mode .report-stat {
+    background: #3d3d3d;
+}
+
+.report-stat label {
+    display: block;
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.report-stat p {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.report-stat p.income {
+    color: #11998e;
+}
+
+.report-stat p.expense {
+    color: #eb3349;
+}
+
+.report-summary-text {
+    background: #e8f5e9;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border-left: 4px solid #11998e;
+}
+
+.dark-mode .report-summary-text {
+    background: #2d4a3e;
+}
+
+.export-options {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.dark-mode .export-options {
+    border-color: #444;
+}
+
+#expense-chart {
+    background: white;
+    border-radius: 8px;
+    margin: 15px 0;
+    max-width: 100%;
+}
+
+.dark-mode #expense-chart {
+    background: #2d2d2d;
+}
+
+.expense-tips ul {
+    background: #fff3cd;
+    padding: 15px 15px 15px 35px;
+    border-radius: 8px;
+    margin-top: 15px;
+}
+
+.dark-mode .expense-tips ul {
+    background: #4a3c1e;
+}
+
+.expense-tips li {
+    margin-bottom: 8px;
+    color: #856404;
+}
+
+.dark-mode .expense-tips li {
+    color: #f8d58a;
+}
+
+#monthly-stats, #net-worth-display {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 15px;
+}
+
+.dark-mode #monthly-stats, .dark-mode #net-worth-display {
+    background: #3d3d3d;
+}
+
+#monthly-stats p, #net-worth-display p {
+    margin-bottom: 8px;
+}
+
+.savings-percentage {
+    text-align: center;
+    font-weight: bold;
+    color: #667eea;
+    margin-top: 10px;
+}
