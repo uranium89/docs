@@ -1,12 +1,28 @@
-node_modules
-bower_components
-[0-9.]*/components
-polymer-all
-_site
+```
+# Dependencies
+node_modules/
+
+# Build artifacts
+dist/
+build/
+*.min.js
+*.min.css
+*.bundle.js
+
+# Logs and temp files
+*.log
+*.tmp
+
+# Environment
+.env
+.env.local
+*.env.*
+
+# Editors
+.vscode/
+.idea/
+
+# OS generated files
 .DS_Store
-*.pyc
-.sass-cache
-*.vulcanized.html
-*.vulcanized.js
-*.sublime-*
-_data/versions
+Thumbs.db
+```

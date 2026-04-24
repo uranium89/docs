@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linux Web OS</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="desktop" id="desktop">
+        <div class="top-bar">
+            <div class="menu-button">☰ Applications</div>
+            <div class="clock" id="clock"></div>
+        </div>
+        
+        <div class="icons-container">
+            <div class="desktop-icon" onclick="openTerminal()">
+                <div class="icon">🖥️</div>
+                <span>Terminal</span>
+            </div>
+            <div class="desktop-icon" onclick="openFileBrowser()">
+                <div class="icon">📁</div>
+                <span>Files</span>
+            </div>
+            <div class="desktop-icon" onclick="openTextEditor()">
+                <div class="icon">📝</div>
+                <span>Text Editor</span>
+            </div>
+            <div class="desktop-icon" onclick="openSettings()">
+                <div class="icon">⚙️</div>
+                <span>Settings</span>
+            </div>
+        </div>
+
+        <!-- Terminal Window -->
+        <div class="window terminal-window" id="terminal-window" style="display:none;">
+            <div class="window-header">
+                <span class="window-title">Terminal</span>
+                <button class="close-btn" onclick="closeWindow('terminal-window')">×</button>
+            </div>
+            <div class="window-content">
+                <div class="terminal-output" id="terminal-output"></div>
+                <div class="terminal-input-line">
+                    <span class="prompt" id="prompt">user@linux:~$ </span>
+                    <input type="text" class="terminal-input" id="terminal-input" autocomplete="off" autofocus>
+                </div>
+            </div>
+        </div>
+
+        <!-- File Browser Window -->
+        <div class="window file-browser-window" id="file-browser-window" style="display:none;">
+            <div class="window-header">
+                <span class="window-title">File Browser</span>
+                <button class="close-btn" onclick="closeWindow('file-browser-window')">×</button>
+            </div>
+            <div class="window-content file-browser-content">
+                <div class="file-path" id="file-path">/home/user</div>
+                <div class="file-list" id="file-list"></div>
+            </div>
+        </div>
+
+        <!-- Text Editor Window -->
+        <div class="window text-editor-window" id="text-editor-window" style="display:none;">
+            <div class="window-header">
+                <span class="window-title">Text Editor</span>
+                <button class="close-btn" onclick="closeWindow('text-editor-window')">×</button>
+            </div>
+            <div class="window-content">
+                <textarea id="text-editor-area" placeholder="Start typing..."></textarea>
+                <div class="editor-buttons">
+                    <button onclick="saveFile()">Save</button>
+                    <button onclick="clearEditor()">Clear</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Window -->
+        <div class="window settings-window" id="settings-window" style="display:none;">
+            <div class="window-header">
+                <span class="window-title">Settings</span>
+                <button class="close-btn" onclick="closeWindow('settings-window')">×</button>
+            </div>
+            <div class="window-content settings-content">
+                <h3>Appearance</h3>
+                <label>
+                    <input type="checkbox" id="dark-mode-toggle" onchange="toggleDarkMode()"> Dark Mode
+                </label>
+                <br><br>
+                <label>
+                    Background Color: 
+                    <input type="color" id="bg-color-picker" value="#2d4d7a" onchange="changeBgColor(this.value)">
+                </label>
+                <br><br>
+                <h3>System Info</h3>
+                <p id="system-info"></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
